@@ -24,7 +24,7 @@ def max_index(target, lst):
 def get_score(i, j, func):
     score = 1
     tree = matrix[i][j]
-    score *= func(tree, [matrix[i][k] for k in range(j + 1, len(matrix))])  # right
+    score *= func(tree, [matrix[i][k] for k in range(j + 1, len(matrix[i]))])  # right
     score *= func(tree, [matrix[i][k] for k in range(j - 1, -1, -1)])  # left
     score *= func(tree, [matrix[k][j] for k in range(i + 1, len(matrix))])  # down
     score *= func(tree, [matrix[k][j] for k in range(i - 1, -1, -1)])  # up
@@ -35,7 +35,7 @@ def task1():
     return sum(
         get_score(i, j, is_hidden) == 0
         for i in range(0, len(matrix))
-        for j in range(0, len(matrix))
+        for j in range(0, len(matrix[i]))
     )
 
 
@@ -43,7 +43,7 @@ def task2():
     return max(
         get_score(i, j, max_index)
         for i in range(0, len(matrix))
-        for j in range(0, len(matrix))
+        for j in range(0, len(matrix[i]))
     )
 
 
