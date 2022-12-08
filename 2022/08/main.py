@@ -8,35 +8,44 @@ for line in data.strip().splitlines():
 
 
 def is_hidden(target, lst):
-    for i in range(0, len(lst)):
-        if lst[i] >= target:
+    for k in range(0, len(lst)):
+        if lst[k] >= target:
             return 1
     return 0
 
 
 def max_index(target, lst):
-    for i in range(0, len(lst)):
-        if lst[i] >= target:
-            return i + 1
+    for k in range(0, len(lst)):
+        if lst[k] >= target:
+            return k + 1
     return max(len(lst), 1)
 
 
 def get_score(i, j, func):
     score = 1
     tree = matrix[i][j]
-    score *= func(tree, [matrix[i][k] for k in range(j + 1, len(matrix))])
-    score *= func(tree, [matrix[i][k] for k in range(j - 1, -1, -1)])
-    score *= func(tree, [matrix[k][j] for k in range(i + 1, len(matrix))])
-    score *= func(tree, [matrix[k][j] for k in range(i - 1, -1, -1)])
+    score *= func(tree, [matrix[i][k] for k in range(j + 1, len(matrix))])  # right
+    score *= func(tree, [matrix[i][k] for k in range(j - 1, -1, -1)])  # left
+    score *= func(tree, [matrix[k][j] for k in range(i + 1, len(matrix))])  # down
+    score *= func(tree, [matrix[k][j] for k in range(i - 1, -1, -1)])  # up
     return score
 
 
-res = 0
-best = 0
-for i in range(len(matrix)):
-    for j in range(len(matrix[i])):
-        if not get_score(i, j, is_hidden):
-            res += 1
-        best = max(best, get_score(i, j, max_index))
-print(res)
-print(best)
+def task1():
+    return sum(
+        get_score(i, j, is_hidden) == 0
+        for i in range(0, len(matrix))
+        for j in range(0, len(matrix))
+    )
+
+
+def task2():
+    return max(
+        get_score(i, j, max_index)
+        for i in range(0, len(matrix))
+        for j in range(0, len(matrix))
+    )
+
+
+print(task1())
+print(task2())
