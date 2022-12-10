@@ -3,18 +3,15 @@ with open('data.txt', 'r') as f:
 
 
 def gen_stream():
-    time = 0
     value = 1
     for line in data.strip().splitlines():
         if line.startswith('noop'):
-            time += 1
             yield value
         elif line.startswith('addx'):
             yield value
             yield value
             _, v = line.split()
             value += int(v)
-            time += 2
 
 
 def task1():
@@ -23,15 +20,14 @@ def task1():
     ]
 
     res = 0
-    prev = 1
+    value = 1
 
     stream = gen_stream()
     start = 0
     for end in cycles:
         for _ in range(start, end):
-            value = next(stream, prev)
-            prev = value
-        res += prev * end
+            value = next(stream, value)
+        res += value * end
         start = end
     return res
 
