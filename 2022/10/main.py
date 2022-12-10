@@ -23,15 +23,14 @@ def task1():
     ]
 
     res = 0
-    prev = 1
+    value = 1
 
     stream = gen_stream()
     start = 0
     for end in cycles:
         for _ in range(start, end):
-            value = next(stream, prev)
-            prev = value
-        res += prev * end
+            value = next(stream, value)
+        res += value * end
         start = end
     return res
 
