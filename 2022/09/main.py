@@ -25,8 +25,8 @@ def move(pos, dir):
     return pos[0] + dx, pos[1] + dy
 
 
-def task(length):
-    with open('data.txt', 'r') as f:
+def task(filename, length):
+    with open(filename, 'r') as f:
         data = f.read()
 
     head = (0, 0)
@@ -46,5 +46,7 @@ def task(length):
     return len(positions)
 
 
-print(task(2))
-print(task(10))
+assert task('test.txt', 2) == 13
+assert task('data.txt', 2) == 6266
+assert task('test2.txt', 10) == 36
+assert task('data.txt', 10) == 2369

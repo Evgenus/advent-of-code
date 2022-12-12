@@ -1,12 +1,3 @@
-with open('data.txt', 'r') as f:
-    data = f.read()
-
-matrix = []
-
-for line in data.strip().splitlines():
-    matrix.append([int(x) for x in line])
-
-
 def is_hidden(target, lst):
     for k in range(0, len(lst)):
         if lst[k] >= target:
@@ -21,7 +12,7 @@ def max_index(target, lst):
     return max(len(lst), 1)
 
 
-def get_score(i, j, func):
+def get_score(matrix, i, j, func):
     score = 1
     tree = matrix[i][j]
     score *= func(tree, [matrix[i][k] for k in range(j + 1, len(matrix[i]))])  # right
@@ -31,21 +22,35 @@ def get_score(i, j, func):
     return score
 
 
-def task1():
+def read_data(filename):
+    with open(filename, 'r') as f:
+        data = f.read()
+
+    return [
+        [int(x) for x in line]
+        for line in data.strip().splitlines()
+    ]
+
+
+def task1(filename):
+    matrix = read_data(filename)
     return sum(
-        get_score(i, j, is_hidden) == 0
+        get_score(matrix, i, j, is_hidden) == 0
         for i in range(0, len(matrix))
         for j in range(0, len(matrix[i]))
     )
 
 
-def task2():
+def task2(filename):
+    matrix = read_data(filename)
     return max(
-        get_score(i, j, max_index)
+        get_score(matrix, i, j, max_index)
         for i in range(0, len(matrix))
         for j in range(0, len(matrix[i]))
     )
 
 
-print(task1())
-print(task2())
+assert task1("test.txt") == 21
+assert task2("test.txt") == 16
+assert task1("data.txt") == 1829
+assert task2("data.txt") == 291840

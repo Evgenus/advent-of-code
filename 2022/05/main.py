@@ -1,40 +1,54 @@
 import re
 from itertools import zip_longest
 
-with open('data.txt', 'r') as stream:
-    data = stream.read()
+from utils import list_split
 
-data1 = []
-data2 = []
-dest = data1
-for line in data.splitlines():
-    if line.strip() == '':
-        dest = data2
-    else:
-        dest.append(line)
 
-rows = zip_longest(
-    *[line[1::4]
-        for line in data1[:-1][::-1]
-    ],
-    fillvalue=' '
-)
+def read_data(filename):
+    with open(filename, 'r') as f:
+        data = f.read()
 
-rows = [[]] + [
-    [
-        box
-        for box in row
-        if box != ' '
+    data1, data2 = list_split(data.splitlines(), [''])
+
+    rows = zip_longest(
+        *[line[1::4]
+            for line in data1[:-1][::-1]
+        ],
+        fillvalue=' '
+    )
+
+    rows = [[]] + [
+        [
+            box
+            for box in row
+            if box != ' '
+        ]
+        for row in rows
     ]
-    for row in rows
-]
 
-for line in data2:
-    move = re.findall(r'(\d+) from (\d+) to (\d+)', line)
-    amount, src, dst = move[0]
-    amount, src, dst = int(amount), int(src), int(dst)
-    rows[dst].extend(rows[src][-amount:])  # [::-1]
-    rows[src][-amount:] = []
+    moves = []
+    for line in data2:
+        move = re.findall(r'(\d+) from (\d+) to (\d+)', line)
+        amount, src, dst = move[0]
+        moves.append((int(amount), int(src), int(dst)))
 
-top = [row[-1] for row in rows[1:]]
-print(''.join(top))
+    return rows, moves
+
+
+def task(filename, reverse):
+    rows, moves = read_data(filename)
+    for amount, src, dst in moves:
+        stack = rows[src][-amount:]
+        if reverse:
+            stack = stack[::-1]
+        rows[dst].extend(stack)
+        rows[src][-amount:] = []
+
+    top = [row[-1] for row in rows[1:]]
+    return ''.join(top)
+
+
+assert task('test.txt', True) == "CMZ"
+assert task('test.txt', False) == "MCD"
+assert task('data.txt', True) == "TDCHVHJTG"
+assert task('data.txt', False) == "NGCMPJLHV"
