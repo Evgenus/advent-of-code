@@ -49,16 +49,16 @@ def read_data():
     monkeys = defaultdict(Monkey)
 
     lines = data.strip().splitlines()
-    for monkey in range(0, len(lines), 7):
-        monkey_name = lines[monkey].split(':')[0].split()[1]
-        items = lines[monkey + 1].split(': ')[1].split(', ')
-        monkeys[monkey_name].set_test(int(lines[monkey + 3].split('by')[1].strip()))
-        monkeys[monkey_name].set_true(lines[monkey + 4].split()[-1])
-        monkeys[monkey_name].set_false(lines[monkey + 5].split()[-1])
-        monkeys[monkey_name].set_formula(lines[monkey + 2].split('=')[1].strip())
-
+    for start in range(0, len(lines), 7):
+        monkey_name = lines[start].split(':')[0].split()[1]
+        monkey = monkeys[monkey_name]
+        items = lines[start + 1].split(': ')[1].split(', ')
         for item in items:
-            monkeys[monkey_name].add(int(item))
+            monkey.add(int(item))
+        monkey.set_test(int(lines[start + 3].split('by')[1].strip()))
+        monkey.set_true(lines[start + 4].split()[-1])
+        monkey.set_false(lines[start + 5].split()[-1])
+        monkey.set_formula(lines[start + 2].split('=')[1].strip())
 
     return monkeys
 
