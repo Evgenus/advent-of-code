@@ -6,8 +6,8 @@ from utils import (
 )
 
 
-def read_data():
-    with open('data.txt', 'r') as f:
+def read_data(filename):
+    with open(filename, 'r') as f:
         data = f.read()
 
     lines = data.strip().splitlines()
@@ -15,15 +15,17 @@ def read_data():
     return map(chain(partial(map, int), sum), groups)
 
 
-def task1():
-    groups = read_data()
+def task1(filename):
+    groups = read_data(filename)
     return max(groups)
 
 
-def task2():
-    groups = read_data()
+def task2(filename):
+    groups = read_data(filename)
     return sum(sorted(groups)[-3:])
 
 
-print(task1())
-print(task2())
+assert task1('test.txt') == 24000
+assert task2('test.txt') == 45000
+assert task1('data.txt') == 67016
+assert task2('data.txt') == 200116

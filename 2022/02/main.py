@@ -1,9 +1,8 @@
-def read_data():
-    with open('data.txt', 'r') as f:
+def read_data(filename):
+    with open(filename, 'r') as f:
         data = f.read()
 
-    lines = data.strip().splitlines()
-    return lines
+    return data.strip().splitlines()
 
 
 FIRST = {
@@ -33,9 +32,9 @@ SCORE1 = {
 }
 
 
-def task1():
+def task1(filename):
     res = 0
-    for line in read_data():
+    for line in read_data(filename):
         a, b = line.split()
         a, b = FIRST[a], SECOND1[b]
         res += SCORE1[a, b]
@@ -64,14 +63,16 @@ SCORE2 = {
 }
 
 
-def task2():
+def task2(filename):
     res = 0
-    for line in read_data():
+    for line in read_data(filename):
         a, b = line.split()
         a, b = FIRST[a], SECOND2[b]
         res += SCORE2[a, b]
     return res
 
 
-print(task1())
-print(task2())
+assert task1('test.txt') == 15
+assert task2('test.txt') == 12
+assert task1('data.txt') == 13484
+assert task2('data.txt') == 13433

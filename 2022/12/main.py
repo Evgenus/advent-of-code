@@ -4,8 +4,8 @@ from utils import (
 )
 
 
-def read_data():
-    with open('data.txt', 'r') as f:
+def read_data(filename):
+    with open(filename, 'r') as f:
         data = f.read()
 
     lines = data.strip().splitlines()
@@ -31,8 +31,8 @@ def read_data():
     return matrix, start, end
 
 
-def task1():
-    matrix, start, end = read_data()
+def task1(filename):
+    matrix, start, end = read_data(filename)
     for (row, col), queue, step in bfs(start):
         if (row, col) == end:
             return step
@@ -45,8 +45,8 @@ def task1():
     return -1
 
 
-def task2():
-    matrix, start, end = read_data()
+def task2(filename):
+    matrix, start, end = read_data(filename)
     for (row, col), queue, step in bfs(end):
         cell = matrix[row][col]
         if cell == 0:
@@ -59,5 +59,7 @@ def task2():
     return -1
 
 
-print(task1())
-print(task2())
+assert task1('test.txt') == 31
+assert task2('test.txt') == 29
+assert task1('data.txt') == 412
+assert task2('data.txt') == 402

@@ -42,8 +42,8 @@ class Monkey:
                 monkeys[self.if_false].add(item % mod)
 
 
-def read_data():
-    with open('data.txt', 'r') as f:
+def read_data(filename):
+    with open(filename, 'r') as f:
         data = f.read()
 
     monkeys = defaultdict(Monkey)
@@ -63,8 +63,8 @@ def read_data():
     return monkeys
 
 
-def task(rounds, div):
-    monkeys = read_data()
+def task(filename, rounds, div):
+    monkeys = read_data(filename)
     factor = lcm(*[monkey.test for monkey in monkeys.values()])
     for _ in range(0, rounds):
         for monkey in monkeys.values():
@@ -77,5 +77,7 @@ def task(rounds, div):
     return counts[-1] * counts[-2]
 
 
-print(task(20, 3))
-print(task(10000, 1))
+assert task('test.txt', 20, 3) == 10605
+assert task('test.txt', 10000, 1) == 2713310158
+assert task('data.txt', 20, 3) == 67830
+assert task('data.txt', 10000, 1) == 15305381442

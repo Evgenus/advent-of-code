@@ -6,12 +6,11 @@ from string import (
 from utils import str_common
 
 
-def read_data():
-    with open('data.txt', 'r') as f:
+def read_data(filename):
+    with open(filename, 'r') as f:
         data = f.read()
 
-    lines = data.strip().splitlines()
-    return lines
+    return data.strip().splitlines()
 
 
 chars = {
@@ -20,8 +19,8 @@ chars = {
 }
 
 
-def task1():
-    lines = read_data()
+def task1(filename):
+    lines = read_data(filename)
     res = 0
     for line in lines:
         half = len(line) // 2
@@ -30,8 +29,8 @@ def task1():
     return res
 
 
-def task2():
-    lines = read_data()
+def task2(filename):
+    lines = read_data(filename)
     res = 0
     for i in range(0, len(lines), 3):
         common = str_common(lines[i], lines[i + 1], lines[i + 2])[0]
@@ -39,5 +38,7 @@ def task2():
     return res
 
 
-print(task1())
-print(task2())
+assert task1('test.txt') == 157
+assert task2('test.txt') == 70
+assert task1('data.txt') == 7793
+assert task2('data.txt') == 2499

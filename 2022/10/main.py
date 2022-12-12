@@ -1,10 +1,14 @@
-with open('data.txt', 'r') as f:
-    data = f.read()
+def read_data(filename):
+    with open(filename, 'r') as f:
+        data = f.read()
+
+    return data.strip().splitlines()
 
 
-def gen_stream():
+def gen_stream(filename):
+    lines = read_data(filename)
     value = 1
-    for line in data.strip().splitlines():
+    for line in lines:
         if line.startswith('noop'):
             yield value
         elif line.startswith('addx'):
@@ -14,7 +18,7 @@ def gen_stream():
             value += int(v)
 
 
-def task1():
+def task1(filename):
     cycles = [
         20, 60, 100, 140, 180, 220
     ]
@@ -22,7 +26,7 @@ def task1():
     res = 0
     value = 1
 
-    stream = gen_stream()
+    stream = gen_stream(filename)
     start = 0
     for end in cycles:
         for _ in range(start, end):
@@ -32,8 +36,8 @@ def task1():
     return res
 
 
-def task2():
-    s = gen_stream()
+def task2(filename):
+    s = gen_stream(filename)
     for y in range(6):
         for x in range(40):
             value = next(s)
@@ -41,5 +45,6 @@ def task2():
         print()
 
 
-print(task1())
-task2()
+assert task1('test.txt') == 13140
+assert task1('data.txt') == 13760
+task2('data.txt')
