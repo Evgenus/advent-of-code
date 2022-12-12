@@ -48,6 +48,15 @@ def list_split(items: list, sep: list) -> list[list]:
     return result
 
 
+def str_common(*strings: str) -> str:
+    return "".join(
+        reduce(
+            lambda x, y: x & y,
+            map(set, strings),
+        )
+    )
+
+
 def chain(*funcs):
     """
     f = chain(f1, f2, f3, f4)
