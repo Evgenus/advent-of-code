@@ -93,3 +93,8 @@ def bfs(*start):
             visited.add(item)
             yield item, queue, step
         step += 1
+
+
+def str_iter_chunks(s, n):
+    for i in range(len(s) - n + 1):
+        yield s[i: i + n]
