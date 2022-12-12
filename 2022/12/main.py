@@ -1,4 +1,7 @@
-from collections import deque
+from utils import (
+    bfs,
+    matrix_next4,
+)
 
 
 def read_data():
@@ -24,57 +27,36 @@ def read_data():
 
             matrix[row][col] = ord(cell) - ord('a')
 
+    matrix: list[list[int]]
     return matrix, start, end
 
 
 def task1():
     matrix, start, end = read_data()
-    visited = set()
-    queue = deque()
-    queue.append(start)
-    step = 0
-    while queue:
-        for _ in range(len(queue)):
-            row, col = queue.popleft()
-            if (row, col) in visited:
-                continue
-            visited.add((row, col))
-            if (row, col) == end:
-                return step
-            for r, c in ((row - 1, col), (row + 1, col), (row, col - 1), (row, col + 1)):
-                if not 0 <= r < len(matrix):
-                    continue
-                if not 0 <= c < len(matrix[row]):
-                    continue
-                if matrix[r][c] <= matrix[row][col] + 1:
-                    queue.append((r, c))
+    for (row, col), queue, step in bfs(start):
+        if (row, col) == end:
+            return step
+        cell = matrix[row][col]
+        for r, c in matrix_next4(matrix, row, col):
+            next_cell = matrix[r][c]
+            if next_cell <= cell + 1:
+                queue.append((r, c))
 
-        step += 1
+    return -1
 
 
 def task2():
     matrix, start, end = read_data()
-    visited = set()
-    queue = deque()
-    queue.append(end)
-    step = 0
-    while queue:
-        for _ in range(len(queue)):
-            row, col = queue.popleft()
-            if (row, col) in visited:
-                continue
-            visited.add((row, col))
-            if matrix[row][col] == 0:
-                return step
-            for r, c in ((row - 1, col), (row + 1, col), (row, col - 1), (row, col + 1)):
-                if not 0 <= r < len(matrix):
-                    continue
-                if not 0 <= c < len(matrix[row]):
-                    continue
-                if matrix[row][col] <= matrix[r][c] + 1:
-                    queue.append((r, c))
+    for (row, col), queue, step in bfs(end):
+        cell = matrix[row][col]
+        if cell == 0:
+            return step
+        for r, c in matrix_next4(matrix, row, col):
+            next_cell = matrix[r][c]
+            if cell <= next_cell + 1:
+                queue.append((r, c))
 
-        step += 1
+    return -1
 
 
 print(task1())

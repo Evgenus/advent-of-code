@@ -1,3 +1,4 @@
+from collections import deque
 from functools import reduce
 
 
@@ -68,3 +69,27 @@ def chain(*funcs):
     def chained(arg):
         return reduce(lambda r, f: f(r), funcs, arg)
     return chained
+
+
+def matrix_next4(matrix, row, col):
+    for r, c in ((row - 1, col), (row + 1, col), (row, col - 1), (row, col + 1)):
+        if not 0 <= r < len(matrix):
+            continue
+        if not 0 <= c < len(matrix[row]):
+            continue
+        yield r, c
+
+
+def bfs(*start):
+    visited = set()
+    queue = deque()
+    queue.extend(start)
+    step = 0
+    while queue:
+        for _ in range(len(queue)):
+            item = queue.popleft()
+            if item in visited:
+                continue
+            visited.add(item)
+            yield item, queue, step
+        step += 1
