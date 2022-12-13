@@ -12,10 +12,11 @@ def read_data(filename):
 
 def compare(a, b):
     if isinstance(a, int) and isinstance(b, int):
-        if a == b:
-            return None
-        else:
-            return a < b
+        if a > b:
+            return 1
+        if a < b:
+            return -1
+        return 0
     if isinstance(a, list) and isinstance(b, int):
         return compare(a, [b])
     if isinstance(a, int) and isinstance(b, list):
@@ -23,13 +24,9 @@ def compare(a, b):
     if isinstance(a, list) and isinstance(b, list):
         for ai, bi in zip(a, b):
             c = compare(ai, bi)
-            if c is not None:
+            if c != 0:
                 return c
-        if len(a) < len(b):
-            return True
-        if len(a) > len(b):
-            return False
-        return None
+        return compare(len(a), len(b))
 
 
 def task1(filename):
@@ -38,31 +35,21 @@ def task1(filename):
     res = 0
     for i, (a, b) in enumerate(list_split(lines, ['']), 1):
         a, b = eval(a), eval(b)
-        if compare(a, b):
+        if compare(a, b) < 0:
             res += i
 
     return res
 
 
-def cmp(a, b):
-    if compare(a, b) is True:
-        return -1
-    if compare(a, b) is False:
-        return 1
-    return 0
-
-
 def test2(filename):
     lines = read_data(filename)
+
     d1 = [[2]]
     d2 = [[6]]
 
-    packets = [
-        eval(line)
-        for line in filter(bool, lines)
-    ] + [d1, d2]
-
-    packets.sort(key=cmp_to_key(cmp))
+    packets = [eval(line) for line in filter(bool, lines)]
+    packets += [d1, d2]
+    packets.sort(key=cmp_to_key(compare))
 
     i1 = packets.index(d1) + 1
     i2 = packets.index(d2) + 1
