@@ -1,26 +1,10 @@
 from collections import deque
 from functools import reduce
 from itertools import groupby
-from typing import Iterator
-
-
-def sign(x):
-    return 1 if x > 0 else -1 if x < 0 else 0
-
-
-def dist4(a, b):
-    dx, dy = abs(a[0] - b[0]), abs(a[1] - b[1])
-    return dx + dy
-
-
-def dist8(a, b):
-    dx, dy = abs(a[0] - b[0]), abs(a[1] - b[1])
-    return max(dx, dy)
-
-
-def move_towards(a, b):
-    dx, dy = b[0] - a[0], b[1] - a[1]
-    return a[0] + sign(dx), a[1] + sign(dy)
+from typing import (
+    Iterable,
+    Iterator,
+)
 
 
 def chain(*funcs):
@@ -58,6 +42,13 @@ def bfs(*start):
             visited.add(item)
             yield item, queue, step
         step += 1
+
+
+# NUMBERS
+
+
+def sign(x):
+    return 1 if x > 0 else -1 if x < 0 else 0
 
 
 # STRINGS
@@ -99,6 +90,11 @@ def str_group(s: str) -> list[str]:
 # LISTS
 
 
+def is_subsequence(self, s: Iterable, t: Iterable) -> bool:
+    it = iter(t)
+    return all(c in it for c in s)
+
+
 def list_startswith(items: list, prefix: list) -> bool:
     """
     >>> list_startswith([1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3])
@@ -128,3 +124,35 @@ def list_split(items: list, sep: list) -> list[list]:
     if current:
         result.append(current)
     return result
+
+
+# CELLS
+
+
+def cell_dist4(a, b) -> int:
+    dx, dy = abs(a[0] - b[0]), abs(a[1] - b[1])
+    return dx + dy
+
+
+def cell_dist8(a, b) -> int:
+    dx, dy = abs(a[0] - b[0]), abs(a[1] - b[1])
+    return max(dx, dy)
+
+
+def cell_move_towards(a, b):
+    dx, dy = b[0] - a[0], b[1] - a[1]
+    return a[0] + sign(dx), a[1] + sign(dy)
+
+
+# VECTORS
+
+def triangle_area(a: float, b: float, c: float) -> float:
+    s = (a + b + c) / 2
+    m = s * (s - a) * (s - b) * (s - c)
+    return abs(m) ** 0.5
+
+
+def vect_length(p1, p2) -> float:
+    x1, y1 = p1
+    x2, y2 = p2
+    return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5

@@ -1,16 +1,7 @@
-def dist(a, b):
-    dx, dy = abs(a[0] - b[0]), abs(a[1] - b[1])
-    return max(dx, dy)
-
-
-def sign(x):
-    return 1 if x > 0 else -1 if x < 0 else 0
-
-
-def move_towards(a, b):
-    dx, dy = b[0] - a[0], b[1] - a[1]
-    return a[0] + sign(dx), a[1] + sign(dy)
-
+from utils import (
+    cell_dist8,
+    cell_move_towards,
+)
 
 MOVES = {
     'U': (0, 1),
@@ -39,8 +30,8 @@ def task(filename, length):
         for _ in range(0, amount):
             rope[0] = move(rope[0], dir)
             for i in range(1, len(rope)):
-                if dist(rope[i], rope[i - 1]) > 1:
-                    rope[i] = move_towards(rope[i], rope[i - 1])
+                if cell_dist8(rope[i], rope[i - 1]) > 1:
+                    rope[i] = cell_move_towards(rope[i], rope[i - 1])
             positions.add(rope[-1])
 
     return len(positions)
