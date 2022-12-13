@@ -12,11 +12,7 @@ def read_data(filename):
 
 def compare(a, b):
     if isinstance(a, int) and isinstance(b, int):
-        if a > b:
-            return 1
-        if a < b:
-            return -1
-        return 0
+        return a - b
     if isinstance(a, list) and isinstance(b, int):
         return compare(a, [b])
     if isinstance(a, int) and isinstance(b, list):
@@ -41,7 +37,7 @@ def task1(filename):
     return res
 
 
-def test2(filename):
+def task2(filename):
     lines = read_data(filename)
 
     d1 = [[2]]
@@ -58,6 +54,6 @@ def test2(filename):
 
 
 assert task1('test.txt') == 13
-assert test2('test.txt') == 140
+assert task2('test.txt') == 140
 assert task1('data.txt') == 5605
-assert test2('data.txt') == 24969
+assert task2('data.txt') == 24969
