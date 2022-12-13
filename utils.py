@@ -1,5 +1,7 @@
 from collections import deque
 from functools import reduce
+from itertools import groupby
+from typing import Iterator
 
 
 def sign(x):
@@ -19,43 +21,6 @@ def dist8(a, b):
 def move_towards(a, b):
     dx, dy = b[0] - a[0], b[1] - a[1]
     return a[0] + sign(dx), a[1] + sign(dy)
-
-
-def list_startswith(items: list, prefix: list) -> bool:
-    """
-    >>> list_startswith([1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3])
-    True
-    >>> list_startswith([1, 2, 3, 4, 5, 6, 7, 8, 9], [2, 3, 4])
-    False
-    """
-    return items[:len(prefix)] == prefix
-
-
-def list_split(items: list, sep: list) -> list[list]:
-    """
-    >>> list_split([1, 2, 3, 4, 5, 6, 7, 8, 9], [4, 5, 6])
-    [[1, 2, 3], [7, 8, 9]]
-    """
-    result = []
-    current = []
-    for i in range(len(items)):
-        if items[i:i + len(sep)] == sep:
-            result.append(current)
-            current = []
-        else:
-            current.append(items[i])
-    if current:
-        result.append(current)
-    return result
-
-
-def str_common(*strings: str) -> str:
-    return "".join(
-        reduce(
-            lambda x, y: x & y,
-            map(set, strings),
-        )
-    )
 
 
 def chain(*funcs):
@@ -95,6 +60,71 @@ def bfs(*start):
         step += 1
 
 
-def str_iter_chunks(s, n):
+# STRINGS
+
+
+def str_common(*strings: str) -> str:
+    """
+    >>> str_common("abc", "abd", "cbe")
+    'b'
+    """
+    return "".join(
+        reduce(
+            lambda x, y: x & y,
+            map(set, strings),
+        )
+    )
+
+
+def str_iter_chunks(s: str, n: int) -> Iterator[str]:
+    """
+    >>> list(str_iter_chunks("123456789", 3))
+    ['123', '234', '345', '456', '567', '678', '789']
+    """
     for i in range(len(s) - n + 1):
         yield s[i: i + n]
+
+
+def str_group(s: str) -> list[str]:
+    """
+    >>> list(str_group("aaabbbccc"))
+    ['aaa', 'bbb', 'ccc']
+    """
+    return [
+        ''.join(group)
+        for _, group in groupby(s)
+    ]
+
+
+# LISTS
+
+
+def list_startswith(items: list, prefix: list) -> bool:
+    """
+    >>> list_startswith([1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3])
+    True
+    >>> list_startswith([1, 2, 3, 4, 5, 6, 7, 8, 9], [2, 3, 4])
+    False
+    """
+    return items[:len(prefix)] == prefix
+
+
+def list_split(items: list, sep: list) -> list[list]:
+    """
+    >>> list_split([1, 2, 3, 4, 5, 6, 7, 8, 9], [4, 5, 6])
+    [[1, 2, 3], [7, 8, 9]]
+    """
+    result = []
+    current = []
+    i = 0
+    while i < len(items):
+        if list_startswith(items[i:], sep):
+            result.append(current)
+            current = []
+            i += len(sep)
+        else:
+            current.append(items[i])
+            i += 1
+    if current:
+        result.append(current)
+    return result
