@@ -2,7 +2,6 @@ from collections import deque
 from functools import reduce
 from itertools import (
     groupby,
-    islice,
 )
 import re
 from typing import (

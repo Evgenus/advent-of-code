@@ -12,13 +12,12 @@ def read_data(filename):
 
     maxy = 0
     for line in lines:
-        pairs = str_integers(line)
-        for i in range(2, len(pairs), 2):
-            x1, y1 = pairs[i - 2], pairs[i - 1]
-            x2, y2 = pairs[i], pairs[i + 1]
-
-            matrix_drawline(matrix, (y1, x1), (y2, x2), 1)
-            maxy = max(maxy, y1, y2)
+        pairs = lmap(tuple, iter_chunks(str_integers(line), 2))
+        for i in range(1, len(pairs)):
+            pair1 = pairs[i - 1]
+            pair2 = pairs[i]
+            matrix_drawline(matrix, pair1[::-1], pair2[::-1], 1)
+            maxy = max(maxy, pair1[1], pair2[1])
 
     return matrix, maxy
 
