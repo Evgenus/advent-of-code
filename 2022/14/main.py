@@ -27,7 +27,7 @@ def print_result(matrix, visited):
         matrix[y][x] = 2
 
     boundaries = matrix_boundaries(matrix, lambda cell: cell != 0)
-    matrix_print(matrix_crop(matrix, *boundaries), translation={'0': '.', '1': '#', '2': 'o'})
+    matrix_print(matrix_crop(matrix, *boundaries), translation={0: '.', 1: '#', 2: 'o'})
 
 
 def fall_one_step(matrix, visited, x, y):
