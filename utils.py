@@ -60,7 +60,9 @@ def matrix_next4(matrix, row, col):
         yield r, c
 
 
-def matrix_print(matrix):
+def matrix_print(matrix, translation=None):
+    translation = translation or {}
+
     def stringify(cell):
         if isinstance(cell, float):
             return f'{cell:.2}'
@@ -72,15 +74,39 @@ def matrix_print(matrix):
     ]
 
     max_len = max(
-        len(cell)
+        len(translation.get(cell, cell))
         for row in stringified
         for cell in row
     )
 
     for row in stringified:
         for cell in row:
+            cell = translation.get(cell, cell)
             print(f'{cell:>{max_len}}', end=' ')
         print()
+
+
+def matrix_boundaries(matrix, func):
+    top = len(matrix) - 1
+    bottom = 0
+    left = len(matrix[0]) - 1
+    right = 0
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            if func(matrix[i][j]):
+                top = min(top, i)
+                bottom = max(bottom, i)
+                left = min(left, j)
+                right = max(right, j)
+
+    return top, bottom, left, right
+
+
+def matrix_crop(matrix, top, bottom, left, right):
+    return [
+        row[left: right + 1]
+        for row in matrix[top: bottom + 1]
+    ]
 
 
 def bfs(*start):
