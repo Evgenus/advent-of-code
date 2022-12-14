@@ -75,7 +75,9 @@ def matrix_drawline(matrix, a, b, value):
 def matrix_print(matrix, translation=None):
     translation = translation or {}
 
-    def stringify(cell):
+    def stringify(cell) -> str:
+        if cell in translation:
+            return str(translation[cell])
         if isinstance(cell, float):
             return f'{cell:.2}'
         return str(cell)
@@ -86,14 +88,13 @@ def matrix_print(matrix, translation=None):
     ]
 
     max_len = max(
-        len(translation.get(cell, cell))
+        len(cell)
         for row in stringified
         for cell in row
     )
 
     for row in stringified:
         for cell in row:
-            cell = translation.get(cell, cell)
             print(f'{cell:>{max_len}}', end=' ')
         print()
 
