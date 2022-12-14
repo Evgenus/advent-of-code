@@ -1,10 +1,41 @@
 from collections import deque
 from functools import reduce
 from itertools import groupby
+import re
 from typing import (
+    Callable,
     Iterable,
     Iterator,
 )
+
+
+def load_input():
+    import json
+    import os.path
+    home = os.path.dirname(os.path.join(__file__))
+    session_path = os.path.join(home, 'session.json')
+    with open(session_path, 'r') as stream:
+        session_data = json.loads(stream.read())
+    token = session_data['session']
+
+    cwd = os.getcwd()
+    cwd, day = os.path.split(cwd)
+    day = day.lstrip('0')
+    cwd, year = os.path.split(cwd)
+
+    import urllib.request
+    import urllib.error
+    import shutil
+    opener = urllib.request.build_opener()
+    opener.addheaders = [
+        ("Cookie", "session={}".format(token)),
+        ("User-Agent", "python-requests/2.19.1"),
+    ]
+
+    url = "https://adventofcode.com/{}/day/{}/input".format(year, day)
+    with opener.open(url) as r:
+        with open("data.txt", "wb") as f:
+            shutil.copyfileobj(r, f)
 
 
 def chain(*funcs):
@@ -29,6 +60,29 @@ def matrix_next4(matrix, row, col):
         yield r, c
 
 
+def matrix_print(matrix):
+    def stringify(cell):
+        if isinstance(cell, float):
+            return f'{cell:.2}'
+        return str(cell)
+
+    stringified = [
+        [stringify(cell) for cell in row]
+        for row in matrix
+    ]
+
+    max_len = max(
+        len(cell)
+        for row in stringified
+        for cell in row
+    )
+
+    for row in stringified:
+        for cell in row:
+            print(f'{cell:>{max_len}}', end=' ')
+        print()
+
+
 def bfs(*start):
     visited = set()
     queue = deque()
@@ -46,13 +100,11 @@ def bfs(*start):
 
 # NUMBERS
 
-
 def sign(x):
     return 1 if x > 0 else -1 if x < 0 else 0
 
 
 # STRINGS
-
 
 def str_common(*strings: str) -> str:
     """
@@ -87,10 +139,25 @@ def str_group(s: str) -> list[str]:
     ]
 
 
+def str_integers(s: str) -> list[int]:
+    """
+    >>> str_integers("12345")
+    [12345]
+    >>> str_integers("send 5 from 12345 to 67890")
+    [5, 12345, 67890]
+    """
+    return lmap(int, re.findall(r'\d+', s))
+
+
 # LISTS
 
-
-def is_subsequence(self, s: Iterable, t: Iterable) -> bool:
+def is_subsequence(s: Iterable, t: Iterable) -> bool:
+    """
+    >>> is_subsequence("abc", "ahbgdc")
+    True
+    >>> is_subsequence("axc", "ahbgdc")
+    False
+    """
     it = iter(t)
     return all(c in it for c in s)
 
@@ -126,8 +193,15 @@ def list_split(items: list, sep: list) -> list[list]:
     return result
 
 
-# CELLS
+def lmap(func: Callable, sequence: Iterable) -> list:
+    """
+    >>> lmap(int, "12345")
+    [1, 2, 3, 4, 5]
+    """
+    return list(map(func, sequence))
 
+
+# CELLS
 
 def cell_dist4(a, b) -> int:
     dx, dy = abs(a[0] - b[0]), abs(a[1] - b[1])
@@ -156,3 +230,26 @@ def vect_length(p1, p2) -> float:
     x1, y1 = p1
     x2, y2 = p2
     return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
+
+
+# DICTIONARIES
+
+def dict_swap(mapping: dict) -> dict:
+    """
+    >>> dict_swap({"a": 1, "b": 2, "c": 3})
+    {1: 'a', 2: 'b', 3: 'c'}
+    """
+    return {v: k for k, v in mapping.items()}
+
+
+def dict_invert(mapping: dict) -> dict:
+    """
+    >>> dict_invert({"a": 1, "b": 2, "c": 3})
+    {1: ['a'], 2: ['b'], 3: ['c']}
+    >>> dict_invert({"a": 1, "b": 2, "c": 1})
+    {1: ['a', 'c'], 2: ['b']}
+    """
+    result = {}
+    for k, v in mapping.items():
+        result.setdefault(v, []).append(k)
+    return result
