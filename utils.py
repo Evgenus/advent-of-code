@@ -1,9 +1,13 @@
 from collections import deque
 from functools import reduce
-from itertools import groupby
+from itertools import (
+    groupby,
+    islice,
+)
 import re
 from typing import (
     Callable,
+    Collection,
     Iterable,
     Iterator,
 )
@@ -58,6 +62,15 @@ def matrix_next4(matrix, row, col):
         if not 0 <= c < len(matrix[row]):
             continue
         yield r, c
+
+
+def matrix_drawline(matrix, a, b, value):
+    while a != b:
+        i, j = a
+        matrix[i][j] = value
+        a = cell_move_towards(a, b)
+    i, j = a
+    matrix[i][j] = value
 
 
 def matrix_print(matrix, translation=None):
@@ -145,15 +158,6 @@ def str_common(*strings: str) -> str:
     )
 
 
-def str_iter_chunks(s: str, n: int) -> Iterator[str]:
-    """
-    >>> list(str_iter_chunks("123456789", 3))
-    ['123', '234', '345', '456', '567', '678', '789']
-    """
-    for i in range(len(s) - n + 1):
-        yield s[i: i + n]
-
-
 def str_group(s: str) -> list[str]:
     """
     >>> list(str_group("aaabbbccc"))
@@ -176,6 +180,29 @@ def str_integers(s: str) -> list[int]:
 
 
 # LISTS
+
+
+def iter_chunks(s: Collection, n: int) -> Iterator:
+    """
+    >>> list(iter_chunks("123456789", 3))
+    ['123', '456', '789']
+    >>> list(iter_chunks([1, 2, 3, 4, 5, 6, 7, 8, 9], 2))
+    [[1, 2], [3, 4], [5, 6], [7, 8]]
+    """
+    for i in range(0, len(s) - n + 1, n):
+        yield s[i: i + n]
+
+
+def iter_window(s: Collection, n: int) -> Iterator:
+    """
+    >>> list(iter_window("123456789", 3))
+    ['123', '234', '345', '456', '567', '678', '789']
+    >>> list(iter_window([1, 2, 3, 4, 5, 6, 7, 8, 9], 2))
+    [[1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9]]
+    """
+    for i in range(len(s) - n + 1):
+        yield s[i: i + n]
+
 
 def is_subsequence(s: Iterable, t: Iterable) -> bool:
     """
