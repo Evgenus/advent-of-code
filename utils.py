@@ -175,8 +175,10 @@ def str_integers(s: str) -> list[int]:
     [12345]
     >>> str_integers("send 5 from 12345 to 67890")
     [5, 12345, 67890]
+    >>> str_integers("send -5 from 12345 to 67890")
+    [-5, 12345, 67890]
     """
-    return lmap(int, re.findall(r'\d+', s))
+    return lmap(int, re.findall(r'-{,1}\d+', s))
 
 
 # LISTS
