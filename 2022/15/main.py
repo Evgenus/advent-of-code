@@ -30,10 +30,10 @@ def task1(filename, row):
     minx = float('inf')
     maxx = -float('inf')
 
-    for a, d in sensors.items():
-        r = (d - abs(a[1] - row))
-        minx = min(minx, a[0] - r)
-        maxx = max(maxx, a[0] + r)
+    for (sx, sy), d in sensors.items():
+        r = (d - abs(sy - row))
+        minx = min(minx, sx - r)
+        maxx = max(maxx, sx + r)
 
     beacons = {x for x, y in beacons if y == row}
     res = 0
@@ -47,14 +47,14 @@ def task1(filename, row):
 def task2(filename, cap):
     sensors, _ = read_data(filename)
 
-    for a, d in sensors.items():
+    for (sx, sy), d in sensors.items():
         d += 1
-        for y in range(a[1] - d, a[1] + d):
+        for y in range(sy - d, sy + d):
             if y > cap or y < 0:
                 break
-            r = (d - abs(a[1] - y))
-            x1 = a[0] - r
-            x2 = a[0] + r
+            r = (d - abs(sy - y))
+            x1 = sx - r
+            x2 = sx + r
             if 0 <= x1 <= cap and check(sensors, x1, y):
                 return x1 * 4000000 + y
             if 0 <= x2 <= cap and check(sensors, x2, y):
