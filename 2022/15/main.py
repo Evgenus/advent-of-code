@@ -1,3 +1,5 @@
+from collections import Counter
+
 from utils import *
 
 
@@ -61,7 +63,33 @@ def task2(filename, cap):
                 return x2 * 4000000 + y
 
 
+def task2_fun(filename, cap):
+    sensors, _ = read_data(filename)
+
+    count = Counter()
+    for i, ((sx, sy), d) in enumerate(sensors.items(), 1):
+        d += 1
+        for y in range(sy - d, sy + d):
+            if y > cap or y < 0:
+                break
+            r = (d - abs(sy - y))
+            x1 = sx - r
+            x2 = sx + r
+            if 0 <= x1 <= cap:
+                count[x1, y] += 1
+            if x2 != x1:
+                if 0 <= x2 <= cap:
+                    count[x2, y] += 1
+
+    for (x, y), c in count.items():
+        if c < 4:
+            continue
+        if check(sensors, x, y):
+            return x * 4000000 + y
+
+
 assert task1('test.txt', 10) == 26
 assert task1('data.txt', 2000000) == 4793062
 assert task2('test.txt', 20) == 56000011
 assert task2('data.txt', 4000000) == 10826395253551
+assert task2_fun('data.txt', 4000000) == 10826395253551
