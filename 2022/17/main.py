@@ -47,7 +47,7 @@ SHAPES = [
 ]
 
 
-def matrix_intersects(matrix, shape, x, y):
+def intersects(matrix, shape, x, y):
     for sy in range(len(shape)):
         for sx in range(len(shape[sy])):
             if shape[sy][sx] == 1 and matrix[y + sy][x + sx] == 1:
@@ -60,12 +60,12 @@ def add_rows(matrix, rows, width):
         matrix.appendleft([0] * width)
 
 
-def trim_matrix(matrix):
+def trim(matrix):
     while all(cell == 0 for cell in matrix[0]):
         matrix.popleft()
 
 
-def draw_shape(matrix, shape, x, y):
+def plot(matrix, shape, x, y):
     for sy in range(len(shape)):
         for sx in range(len(shape[sy])):
             if shape[sy][sx] == 1:
@@ -93,25 +93,25 @@ def task(filename, rocks_count):
         while True:
             if moves[move] == '>':
                 if x + len(shape[0]) < WIDTH:
-                    if not matrix_intersects(matrix, shape, x + 1, y):
+                    if not intersects(matrix, shape, x + 1, y):
                         x += 1
             else:
                 if x > 0:
-                    if not matrix_intersects(matrix, shape, x - 1, y):
+                    if not intersects(matrix, shape, x - 1, y):
                         x -= 1
             move = (move + 1) % len(moves)
-            if matrix_intersects(matrix, shape, x, y + 1):
+            if intersects(matrix, shape, x, y + 1):
                 break
             y += 1
-        draw_shape(matrix, shape, x, y)
+        plot(matrix, shape, x, y)
         rocks += 1
         s = (s + 1) % len(SHAPES)
-        trim_matrix(matrix)
+        trim(matrix)
 
         # print('=' * 80)
         # matrix_print(matrix, translation={0: '.', 1: '#'})
 
-        if rocks > 100:
+        if len(matrix) > 20:
             matrix_top = tuple(int(''.join(map(str, matrix[i])), 2) for i in range(20))
             key = (matrix_top, move, s)
             seen[key].append((rocks, len(matrix) - 1))
@@ -120,6 +120,8 @@ def task(filename, rocks_count):
                 r2, h2 = seen[key][-1]
                 if (rocks_count - r1) % (r2 - r1) == 0:
                     result = (rocks_count - r1) // (r2 - r1) * (h2 - h1) + h1
+                    print(f'after {r1} rocks height is {h1}')
+                    print(f'after {r2} rocks height is {h2}')
                     print(f'({rocks_count} - {r1}) // ({r2} - {r1}) * ({h2} - {h1}) + {h1} == {result}')
                     return result
 
