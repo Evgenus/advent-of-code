@@ -120,6 +120,7 @@ def task(filename, rocks_count):
                 r2, h2 = seen[key][-1]
                 if (rocks_count - r1) % (r2 - r1) == 0:
                     result = (rocks_count - r1) // (r2 - r1) * (h2 - h1) + h1
+                    print(f'{filename=} {rocks_count=}')
                     print(f'after {r1} rocks height is {h1}')
                     print(f'after {r2} rocks height is {h2}')
                     print(f'({rocks_count} - {r1}) // ({r2} - {r1}) * ({h2} - {h1}) + {h1} == {result}')
