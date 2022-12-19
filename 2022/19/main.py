@@ -1,3 +1,5 @@
+from itertools import islice
+
 from utils import *
 
 
@@ -20,8 +22,7 @@ def read_data(filename):
         data = f.read()
 
     parts = data.strip().split('.')
-    workflows = []
-    for workflow, chunk in enumerate(iter_chunks(parts, 4), 1):
+    for chunk in iter_chunks(parts, 4):
         chunk = lmap(str.strip, '.'.join(chunk).split(':')[1].split('.'))
         rules = [None, None, None, None]
         limits = [0, 0, 0, inf]
@@ -40,9 +41,7 @@ def read_data(filename):
             robot_num = NAMES[robot_name]
             rules[robot_num] = tuple_from_dict(parts)
 
-        workflows.append((workflow, rules, limits))
-
-    return workflows
+        yield rules, limits
 
 
 def can_build(parts, rule):
@@ -118,14 +117,14 @@ def process_blueprint(rules, limits, turns):
 
 def task1(filename, turns):
     result = 0
-    for num, rules, limits in read_data(filename):
+    for num, (rules, limits) in enumerate(read_data(filename), 1):
         result += num * process_blueprint(rules, limits, turns)
     return result
 
 
 def task2(filename, turns):
     result = 1
-    for _, rules, limits in read_data(filename)[:3]:
+    for rules, limits in islice(read_data(filename), 3):
         result *= process_blueprint(rules, limits, turns)
     return result
 
