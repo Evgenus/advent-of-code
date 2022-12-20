@@ -2,6 +2,9 @@ from utils import *
 
 
 class Node:
+    """
+    This makes values unique in the list.
+    """
     def __init__(self, value):
         self.value = value
 
@@ -10,6 +13,7 @@ def read_data(filename):
     with open(filename, 'r') as f:
         data = f.read()
 
+    # read lines -> convert to integers -> wrap in Node -> make list
     return lmap(chain(int, Node), data.strip().splitlines())
 
 
@@ -18,12 +22,12 @@ def mix(nodes, times):
     size = len(nodes) - 1
 
     for _ in range(times):
-        for node in nodes:
+        for node in nodes:  # order of mixing is defined by initial list
             old_position = result.index(node)
             result.pop(old_position)
             new_position = old_position + node.value
             new_position %= size
-            if new_position <= 0:
+            if new_position <= 0:  # 0-index is the last element
                 new_position += size
             result.insert(new_position, node)
 
