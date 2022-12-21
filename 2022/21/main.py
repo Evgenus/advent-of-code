@@ -42,16 +42,8 @@ def task1(filename):
     return calculate('root', values, expressions)
 
 
-def task2(filename):
-    values, expressions = read_data(filename)
-
-    expressions['root'][1] = '-'  # change root operation to subtraction
-
-    def func(x):
-        return calculate('root', {**values, 'humn': x}, expressions)
-
+def descent(func, x):
     dx = 1
-    x = values['humn']
     m = sign(func(x + dx) - func(x))  # function is increasing or decreasing
     # search such `x` that `func(x) == 0`
     while True:
@@ -66,6 +58,17 @@ def task2(filename):
             dx *= 2  # increasing speed
         dx = -sign(dx)
         x += dx
+
+
+def task2(filename):
+    values, expressions = read_data(filename)
+
+    expressions['root'][1] = '-'  # change root operation to subtraction
+
+    def func(x):
+        return calculate('root', {**values, 'humn': x}, expressions)
+
+    return descent(func, values['humn'])
 
 
 assert task1('test.txt') == 152
