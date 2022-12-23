@@ -146,6 +146,10 @@ def sign(x):
     return 1 if x > 0 else -1 if x < 0 else 0
 
 
+def int_from_bits(bits):
+    return int(''.join(map(chain(int, str), bits)), 2)
+
+
 # STRINGS
 
 def str_common(*strings: str) -> str:
