@@ -1,3 +1,4 @@
+import operator
 from collections import deque
 from functools import reduce
 from itertools import (
@@ -261,6 +262,14 @@ def lmap(func: Callable, sequence: Iterable) -> list:
     [1, 2, 3, 4, 5]
     """
     return list(map(func, sequence))
+
+
+def mul(sequence: Iterable):
+    """
+    >>> mul([1, 2, 3, 4, 5])
+    120
+    """
+    return reduce(operator.mul, sequence, 1)
 
 
 # CELLS
