@@ -64,6 +64,19 @@ def matrix_next4(matrix, row, col):
         yield r, c
 
 
+def matrix_next8(matrix, row, col):
+    for r, c in (
+            (row - 1, col - 1), (row, col - 1), (row + 1, col - 1),
+            (row - 1, col), (row + 1, col),
+            (row - 1, col + 1), (row, col + 1), (row + 1, col + 1),
+    ):
+        if not 0 <= r < len(matrix):
+            continue
+        if not 0 <= c < len(matrix[row]):
+            continue
+        yield r, c
+
+
 def matrix_drawline(matrix, a, b, value):
     while a != b:
         i, j = a
