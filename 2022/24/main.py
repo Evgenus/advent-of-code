@@ -1,6 +1,3 @@
-from utils import *
-
-
 def read_data(filename):
     with open(filename, 'r') as f:
         data = f.read()
@@ -32,33 +29,30 @@ class Solver:
             if char in directions
         ]
 
-        self.forbidden = {
-            (time, (i + di * time) % self.n, (j + dj * time) % self.m)
-            for time in range(0, 1000)
-            for (i, j), (di, dj) in self.blizzards
-        }
-
     def travel(self, step, start, end):
         step += 1
         queue = set()
         while True:
+            step += 1
+            forbidden = {
+                ((i + di * step) % self.n, (j + dj * step) % self.m)
+                for (i, j), (di, dj) in self.blizzards
+            }
+
             queue.add(start)
             next_queue = set()
             for i, j in queue:
                 if (i, j) == end:
-                    return step + 1
+                    return step
                 for ni, nj in (i, j), (i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1):
                     if not 0 <= ni < self.n:
                         continue
                     if not 0 <= nj < self.m:
                         continue
-                    if (step + 1, ni, nj) in self.forbidden:
-                        continue
-                    if (ni, nj) in next_queue:
+                    if (ni, nj) in forbidden:
                         continue
                     next_queue.add((ni, nj))
             queue = next_queue
-            step += 1
 
 
 def task1(filename):
