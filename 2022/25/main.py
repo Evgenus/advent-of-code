@@ -8,17 +8,30 @@ def read_data(filename):
     return data.strip().splitlines()
 
 
+TO_SNAFU = {
+    '=': -2,
+    '-': -1,
+    '0': 0,
+    '1': 1,
+    '2': 2,
+}
+
+
 def from_snafu(number):
     s = 0
     for d in number:
         s *= 5
-        if d == '-':
-            s -= 1
-        elif d == '=':
-            s -= 2
-        else:
-            s += int(d)
+        s += TO_SNAFU[d]
     return s
+
+
+FROM_SNAFU = {
+    0: '0',
+    1: '1',
+    2: '2',
+    3: '=',
+    4: '-',
+}
 
 
 def to_snafu(number):
@@ -26,15 +39,9 @@ def to_snafu(number):
     while number:
         d = number % 5
         number //= 5
-        if d <= 2:
-            s = str(d) + s
-        else:
+        s = FROM_SNAFU[d] + s
+        if d > 2:
             number += 1
-            d -= 5
-            if d == -1:
-                s = '-' + s
-            else:
-                s = '=' + s
     return s
 
 
