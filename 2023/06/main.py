@@ -15,7 +15,7 @@ def read_data(filename):
 def ways(time, distance):
     return sum(
         (time - hold) * hold > distance
-        for hold in range(1, time + 1)
+        for hold in range(time)
     )
 
 
