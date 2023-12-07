@@ -2,7 +2,7 @@ from collections import defaultdict, Counter
 from functools import cache, partial, cmp_to_key
 
 from utils import *
-load_input()
+# load_input()
 
 
 def read_data(filename):
@@ -13,15 +13,10 @@ def read_data(filename):
 
 
 CARDS1 = "AKQJT98765432"[::-1]
-CARDS2 = "AKQT98765432J"[::-1]
 
 
 def to_value1(hand):
     return tuple(CARDS1.index(card) for card in hand)
-
-
-def to_value2(hand):
-    return tuple(CARDS2.index(card) for card in hand)
 
 
 def has_five(hand):
@@ -52,61 +47,33 @@ def has_high_cards(hand):
     return Counter(Counter(hand).values())[1] == 5
 
 
+RANKS = [
+    has_high_cards,
+    has_one_pairs,
+    has_two_pairs,
+    has_three,
+    has_full_house,
+    has_four,
+    has_five,
+]
+
+
 @cache
 def get_rank(hand):
-    rank = 7
-    for func in (has_five, has_four, has_full_house, has_three, has_two_pairs, has_one_pairs, has_high_cards):
+    for rank, func in reversed(list(enumerate(RANKS, start=1))):
         if func(hand):
             return rank
-        rank -= 1
-    return rank
-
-
-@cache
-def find_rank(hand):
-    return max(get_rank(hand.replace('J', repl)) for repl in CARDS2)
-
-
-def compare1(hand1, hand2):
-    rank1 = get_rank(hand1)
-    rank2 = get_rank(hand2)
-    if rank1 < rank2:
-        return -1
-    if rank1 > rank2:
-        return 1
-
-    value1 = to_value1(hand1)
-    value2 = to_value1(hand2)
-    if value1 < value2:
-        return -1
-    if value1 > value2:
-        return 1
-
     return 0
 
 
-def compare2(hand1, hand2):
-    rank1 = find_rank(hand1)
-    rank2 = find_rank(hand2)
-    if rank1 < rank2:
-        return -1
-    if rank1 > rank2:
-        return 1
-
-    value1 = to_value2(hand1)
-    value2 = to_value2(hand2)
-    if value1 < value2:
-        return -1
-    if value1 > value2:
-        return 1
-
-    return 0
+def key1(hand):
+    return get_rank(hand), to_value1(hand)
 
 
 def task1(filename):
     lines = read_data(filename)
     data = dict(lmap(str.split, lines))
-    sorted_data = sorted(data.keys(), key=cmp_to_key(compare1))
+    sorted_data = sorted(data.keys(), key=key1)
 
     return sum(
         number * int(data[card])
@@ -114,10 +81,26 @@ def task1(filename):
     )
 
 
+CARDS2 = "AKQT98765432J"[::-1]
+
+
+def to_value2(hand):
+    return tuple(CARDS2.index(card) for card in hand)
+
+
+@cache
+def find_rank(hand):
+    return max(get_rank(hand.replace('J', repl)) for repl in CARDS2)
+
+
+def key2(hand):
+    return find_rank(hand), to_value2(hand)
+
+
 def task2(filename):
     lines = read_data(filename)
     data = dict(lmap(str.split, lines))
-    sorted_data = sorted(data.keys(), key=cmp_to_key(compare2))
+    sorted_data = sorted(data.keys(), key=key2)
 
     return sum(
         number * int(data[card])
