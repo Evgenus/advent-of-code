@@ -1,5 +1,4 @@
-from collections import defaultdict, Counter
-from functools import cache, partial
+from itertools import pairwise
 
 from utils import *
 # load_input()
@@ -18,7 +17,7 @@ def read_data(filename):
 def analyze(seq):
     return [
         b - a
-        for a, b in zip(seq, seq[1:])
+        for a, b in pairwise(seq)
     ]
 
 
