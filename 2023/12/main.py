@@ -44,8 +44,8 @@ def task1(filename):
     lines = read_data(filename)
     result = 0
     for line in lines:
-        field, numbes_str = line.split()
-        numbers = tuple(lmap(int, numbes_str.split(',')))
+        field, numbers_str = line.split()
+        numbers = tuple(lmap(int, numbers_str.split(',')))
         res = try_match(field, numbers, True) + try_match(field, numbers, False)
         # print(res)
         result += res
@@ -56,8 +56,8 @@ def task2(filename):
     lines = read_data(filename)
     result = 0
     for line in lines:
-        field, numbes_str = line.split()
-        numbers = tuple(lmap(int, numbes_str.split(',')))
+        field, numbers_str = line.split()
+        numbers = tuple(lmap(int, numbers_str.split(',')))
         field = '?'.join([field] * 5)
         numbers *= 5
         res = try_match(field, numbers, True) + try_match(field, numbers, False)
