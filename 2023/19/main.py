@@ -1,5 +1,3 @@
-from copy import copy
-from dataclasses import dataclass
 from functools import cache
 from typing import NamedTuple
 
@@ -96,8 +94,7 @@ def apply_more(r: range, value: int):
     return r, range(0)
 
 
-@dataclass
-class RangePart:
+class RangePart(NamedTuple):
     x: range
     m: range
     a: range
@@ -108,12 +105,9 @@ class RangePart:
         return len(self.x) * len(self.m) * len(self.a) * len(self.s)
 
     def _apply(self, func, name: str, value: int):
-        r = getattr(self, name)
-        ra, rb = func(r, value)
-        a, b = copy(self), copy(self)
-        setattr(a, name, ra)
-        setattr(b, name, rb)
-        return a, b
+        a, b = self._asdict(), self._asdict()
+        a[name], b[name] = func(a[name], value)
+        return RangePart(**a), RangePart(**b)
 
     def apply_less(self, name: str, value: int):
         return self._apply(apply_less, name, value)
