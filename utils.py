@@ -285,6 +285,10 @@ def mul(sequence: Iterable):
     return reduce(operator.mul, sequence, 1)
 
 
+def first(sequence: Iterable):
+    return next(iter(sequence))
+
+
 # CELLS
 
 def cell_dist4(a, b) -> int:
