@@ -30,11 +30,12 @@ def read_data(filename):
 
 def make_fall(bricks):
     space = defaultdict(int)
+    for index, brick in enumerate(bricks, start=1):
+        for x, y, z in brick:
+            space[x, y, z] = index
+
     while True:
         fall = False
-        for index, brick in enumerate(bricks, start=1):
-            for x, y, z in brick:
-                space[x, y, z] = index
 
         for index, brick in enumerate(bricks, start=1):
             if all(space[x, y, z - 1] in (0, index) and z > 0 for x, y, z in brick):
