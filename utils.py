@@ -277,6 +277,14 @@ def lmap(func: Callable, sequence: Iterable) -> list:
     return list(map(func, sequence))
 
 
+def tmap(func: Callable, sequence: Iterable) -> tuple:
+    """
+    >>> tmap(int, "12345")
+    (1, 2, 3, 4, 5)
+    """
+    return tuple(map(func, sequence))
+
+
 def mul(sequence: Iterable):
     """
     >>> mul([1, 2, 3, 4, 5])
