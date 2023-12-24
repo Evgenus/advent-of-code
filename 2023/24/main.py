@@ -77,12 +77,11 @@ def task2(filename):
 
     equations = []
     for t, ((px, py, pz), (vx, vy, vz)) in zip(times, hails):
-        equation = Eq(px + vx * t, rock_px + rock_vx * t)
-        equations.append(equation)
-        equation = Eq(py + vy * t, rock_py + rock_vy * t)
-        equations.append(equation)
-        equation = Eq(pz + vz * t, rock_pz + rock_vz * t)
-        equations.append(equation)
+        equations += [
+            Eq(px + vx * t, rock_px + rock_vx * t),
+            Eq(py + vy * t, rock_py + rock_vy * t),
+            Eq(pz + vz * t, rock_pz + rock_vz * t),
+        ]
 
     results = solve(equations, times + params, dict=True)
     assert len(results) == 1
