@@ -64,7 +64,7 @@ def task1(filename, start, end):
 def task2(filename):
     hails = read_data(filename)
 
-    hails = hails[:3]
+    hails = hails[:3]  # it appears that 3 hailstones are enough to check
     times = [Symbol(f't{i}') for i, _ in enumerate(hails)]
 
     rock_px = Symbol(f'rock_px')
