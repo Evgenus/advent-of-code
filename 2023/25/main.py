@@ -24,8 +24,7 @@ def task1(filename):
 
     g = nx.Graph(edges)
     g.remove_edges_from(nx.minimum_edge_cut(g))
-    components = list(nx.connected_components(g))
-    return len(components[0]) * len(components[1])
+    return mul(lmap(len, nx.connected_components(g)))
 
 
 assert task1('test.txt') == 54
