@@ -11,28 +11,13 @@ def read_data(filename):
 
 def task1(filename):
     lines = read_data(filename)
-    lines = lmap(list, lines)
-    print(lines)
     result = 0
     n = len(lines)
     m = len(lines[0])
     for i in range(n):
         for j in range(m):
-            for di, dj in (
-                    (-1, -1), (0, -1), (1, -1),
-                    (-1, 0),           (1, 0),
-                    (-1, 1), (0, 1), (1, 1),
-            ):
-                for k, c in enumerate("XMAS"):
-                    ni = i + di * k
-                    nj = j + dj * k
-                    if not 0 <= ni < n:
-                        break
-                    if not 0 <= nj < m:
-                        break
-                    if lines[ni][nj] != c:
-                        break
-                else:
+            for dr, dc in MATRIX_DIR:
+                if sum(c == t for c, t in zip("XMAS", matrix_iterdir(lines, i, j, dr, dc))) == 4:
                     result += 1
 
     print(f"1: {filename}, {result}")
@@ -41,8 +26,6 @@ def task1(filename):
 
 def task2(filename):
     lines = read_data(filename)
-    lines = lmap(list, lines)
-    print(lines)
     result = 0
     n = len(lines)
     m = len(lines[0])
@@ -50,25 +33,10 @@ def task2(filename):
         for j in range(1, m - 1):
             if lines[i][j] != 'A':
                 continue
-            if lines[i - 1][j - 1] == 'M':
-                if lines[i + 1][j + 1] != 'S':
-                    continue
-            elif lines[i - 1][j - 1] == 'S':
-                if lines[i + 1][j + 1] != 'M':
-                    continue
-            else:
-                continue
 
-            if lines[i + 1][j - 1] == 'M':
-                if lines[i - 1][j + 1] != 'S':
-                    continue
-            elif lines[i + 1][j - 1] == 'S':
-                if lines[i - 1][j + 1] != 'M':
-                    continue
-            else:
-                continue
-
-            result += 1
+            v = ''.join(lines[r][c] for r, c in matrix_nextX(lines, i, j))
+            if v in ["MMSS", "MSSM", "SSMM", "SMMS"]:
+                result += 1
 
     print(f"2: {filename}, {result}")
     return result

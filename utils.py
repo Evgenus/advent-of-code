@@ -1,8 +1,16 @@
 import operator
-from collections import deque
-from functools import reduce
+from collections import (
+    deque,
+    Counter,
+    defaultdict,
+)
+from functools import (
+    reduce,
+    cmp_to_key,
+)
 from itertools import (
     groupby,
+    pairwise,
 )
 import re
 from typing import (
@@ -55,8 +63,23 @@ def chain(*funcs):
     return chained
 
 
+MATRIX_DIR = (
+    (-1, -1), (0, -1), (1, -1),
+    (-1,  0),          (1,  0),
+    (-1,  1), (0,  1), (1,  1),
+)
+
 def matrix_next4(matrix, row, col):
     for r, c in ((row - 1, col), (row + 1, col), (row, col - 1), (row, col + 1)):
+        if not 0 <= r < len(matrix):
+            continue
+        if not 0 <= c < len(matrix[row]):
+            continue
+        yield r, c
+
+
+def matrix_nextX(matrix, row, col):
+    for r, c in ((row - 1, col - 1), (row + 1, col - 1), (row + 1, col + 1), (row - 1, col + 1)):
         if not 0 <= r < len(matrix):
             continue
         if not 0 <= c < len(matrix[row]):
@@ -134,6 +157,17 @@ def matrix_crop(matrix, top, bottom, left, right):
         row[left: right + 1]
         for row in matrix[top: bottom + 1]
     ]
+
+
+def matrix_iterdir(matrix, r, c, dr, dc):
+    while True:
+        if not 0 <= r < len(matrix):
+            break
+        if not 0 <= c < len(matrix[r]):
+            break
+        yield matrix[r][c]
+        r += dr
+        c += dc
 
 
 def bfs(*start):
