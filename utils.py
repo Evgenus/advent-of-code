@@ -200,6 +200,27 @@ def int_from_bits(bits):
 
 # STRINGS
 
+def str_lsplit(sep: str):
+    def splitter(s: str):
+        return s.split(sep)
+    return splitter
+
+
+str_split = str_lsplit
+
+
+def str_tsplit(sep: str):
+    def splitter(s: str):
+        return tuple(s.split(sep))
+    return splitter
+
+
+def str_ssplit(sep: str):
+    def splitter(s: str):
+        return set(s.split(sep))
+    return splitter
+
+
 def str_common(*strings: str) -> str:
     """
     >>> str_common("abc", "abd", "cbe")
@@ -317,6 +338,14 @@ def tmap(func: Callable, sequence: Iterable) -> tuple:
     (1, 2, 3, 4, 5)
     """
     return tuple(map(func, sequence))
+
+
+def smap(func: Callable, sequence: Iterable) -> set:
+    """
+    >>> tmap(int, "12345")
+    (1, 2, 3, 4, 5)
+    """
+    return set(map(func, sequence))
 
 
 def mul(sequence: Iterable):
