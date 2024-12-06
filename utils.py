@@ -201,6 +201,10 @@ def int_from_bits(bits):
 # STRINGS
 
 def str_lsplit(sep: str):
+    """
+    >>> str_lsplit(',')('1,2,3,4')
+    ['1', '2', '3', '4']
+    """
     def splitter(s: str):
         return s.split(sep)
     return splitter
@@ -210,6 +214,10 @@ str_split = str_lsplit
 
 
 def str_tsplit(sep: str):
+    """
+    >>> str_tsplit(',')('1,2,3,4')
+    ('1', '2', '3', '4')
+    """
     def splitter(s: str):
         return tuple(s.split(sep))
     return splitter
