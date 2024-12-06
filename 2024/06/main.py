@@ -98,4 +98,4 @@ def task2(filename):
 assert task1('test.txt') == 41
 assert task1('data.txt') == 5239
 assert task2('test.txt') == 6
-assert task2('data.txt') == 0
+assert task2('data.txt') == 1753
