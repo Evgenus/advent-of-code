@@ -364,6 +364,64 @@ def mul(sequence: Iterable):
     return reduce(operator.mul, sequence, 1)
 
 
+def list_variate(items: list, size: int) -> list:
+    """
+    >>> for variant in list_variate([1, 2, 3], 3): print(variant)
+    [1, 1, 1]
+    [1, 1, 2]
+    [1, 1, 3]
+    [1, 2, 1]
+    [1, 2, 2]
+    [1, 2, 3]
+    [1, 3, 1]
+    [1, 3, 2]
+    [1, 3, 3]
+    [2, 1, 1]
+    [2, 1, 2]
+    [2, 1, 3]
+    [2, 2, 1]
+    [2, 2, 2]
+    [2, 2, 3]
+    [2, 3, 1]
+    [2, 3, 2]
+    [2, 3, 3]
+    [3, 1, 1]
+    [3, 1, 2]
+    [3, 1, 3]
+    [3, 2, 1]
+    [3, 2, 2]
+    [3, 2, 3]
+    [3, 3, 1]
+    [3, 3, 2]
+    [3, 3, 3]
+    """
+    if size > 1:
+        for item in items:
+            for tail in list_variate(items, size - 1):
+                yield [item, *tail]
+    else:
+        for item in items:
+            yield [item]
+
+
+def list_interlace(*seqs: list) -> list:
+    """
+    >>> list_interlace([1, 2], [3], [4, 5, 6])
+    [1, 3, 4, 2, 5, 6]
+    """
+    result = []
+    seqs = lmap(deque, seqs)
+    while seqs:
+        nxt = []
+        for seq in seqs:
+            if seq:
+               result.append(seq.popleft())
+            if seq:
+                nxt.append(seq)
+        seqs = nxt
+    return result
+
+
 def first(sequence: Iterable):
     return next(iter(sequence))
 
